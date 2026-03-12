@@ -1,19 +1,20 @@
-
-
 import { io } from "socket.io-client";
-
 
 export let socket;
 
 export const connectSocket = (userId) => {
-  
+
   if (socket) {
     socket.disconnect();
   }
 
-  
-  socket = io("http://localhost:5001", {
-    query: { userId }, 
+  const SOCKET_URL =
+    import.meta.env.MODE === "development"
+      ? "http://localhost:5001"
+      : "/";
+
+  socket = io(SOCKET_URL, {
+    query: { userId },
     withCredentials: true,
   });
 
