@@ -23,33 +23,23 @@ const ProfilePage = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    
     const reader = new FileReader();
-    reader.onload = () => {
-      setSelectedImg(reader.result);
+
+    reader.onloadend = async () => {
+      const base64Image = reader.result;
+
+      setSelectedImg(base64Image);
+
+      try {
+        await updateProfile({
+          profilePic: base64Image,
+        });
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
     };
+
     reader.readAsDataURL(file);
-
-    
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", "YOUR_UPLOAD_PRESET"); 
-      const res = await fetch(
-        `https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload`, 
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      const data = await res.json();
-
-      
-      await updateProfile({ profilePic: data.secure_url });
-    } catch (error) {
-      console.error("Error uploading image:", error);
-    }
   };
 
   return (
