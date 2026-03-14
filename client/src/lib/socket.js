@@ -18,9 +18,13 @@ export const connectSocket = (userId) => {
     withCredentials: true,
   });
 
-  socket.on("connect", () => {});
+  socket.on("connect", () => {
+  console.log("Socket connected:", socket.id);
+  });
 
-  socket.on("disconnect", () => {});
+  socket.on("disconnect", () => {
+    console.log("Socket disconnected");
+  });
 };
 
 export const disconnectSocket = () => {
