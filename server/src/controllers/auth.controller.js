@@ -94,38 +94,37 @@ export const logout = (req, res) => {
 
 
 export const updateProfile = async (req, res) => {
-    try {
-        const file = req.file;
-        const userId = req.user.id;
+  try {
+    const { profilePic } = req.body;
+    const userId = req.user.id;
 
-        if (!file) {
-            return res.status(500).json({ message: "profile pic is required." });
-        }
-
-        const uploadResponse = await cloudinary.uploader.upload(file.path, {
-            folder: "profile_pics",
-            width: 150,
-            crop: "fill"
-        });
-        const updatedUser = await prisma.user.update({
-            where: {
-                id: userId,
-            },
-            data: {
-                profilePic: uploadResponse.secure_url, // Save the URL from Cloudinary
-            },
-        });
-
-        res.status(200).json({
-            message: "Profile picture updated successfully",
-            profilePic: updatedUser.profilePic,
-        });
-
-
-    } catch (error) {
-        res.status(500).json({ message: "Internal Server Error." })
+    if (!profilePic) {
+      return res.status(400).json({ message: "Profile pic is required." });
     }
-}
+
+    const uploadResponse = await cloudinary.uploader.upload(profilePic, {
+      folder: "profile_pics",
+      width: 150,
+      crop: "fill",
+    });
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        profilePic: uploadResponse.secure_url,
+      },
+    });
+
+    res.status(200).json({
+      message: "Profile picture updated successfully",
+      profilePic: updatedUser.profilePic,
+    });
+
+  } catch (error) {
+    console.error("UPDATE PROFILE ERROR:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 
 
 export const checkAuth = (req, res)=> {
