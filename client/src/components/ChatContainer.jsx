@@ -19,15 +19,14 @@ const ChatContainer = () => {
   const messageEndRef = useRef(null);
 
   useEffect(() => {
-    if (!selectedUser) return;
+    if (!selectedUser || !socket) return;
 
     getMessages(selectedUser.id);
-    subscribeToMessages();
 
-    return () => {
-      unsubscribeFromMessages();
-    };
-  }, [selectedUser?.id, socket]);
+    const cleanup = subscribeToMessages(socket);
+
+    return cleanup;
+  }, [selectedUser?.id, socket, getMessages, subscribeToMessages]);
 
   useEffect(() => {
     if (messageEndRef.current && messages) {
@@ -53,9 +52,8 @@ const ChatContainer = () => {
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`chat ${
-              message.senderId === authUser.id ? "chat-end" : "chat-start"
-            }`}
+            className={`chat ${message.senderId === authUser.id ? "chat-end" : "chat-start"
+              }`}
             ref={messageEndRef}
           >
             <div className="chat-image avatar">
