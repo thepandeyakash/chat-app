@@ -23,14 +23,27 @@ export const getReceiverSocketId = (receiverId) => {
 io.on("connection", (socket) => {
   const userId = socket.handshake.query.userId;
 
+  console.log("🟢 SOCKET CONNECTED", {
+    socketId: socket.id,
+    userId,
+  });
+
   if (userId && userId !== "undefined") {
     userSocketMap[String(userId)] = socket.id;
   }
+
+  console.log("👥 SOCKET MAP:", userSocketMap);
 
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
   socket.on("typing", ({ receiverId, senderId, isTyping }) => {
 
+    console.log("⌨️ TYPING:", {
+      senderId,
+      receiverId,
+      isTyping,
+      receiverSocketId: getReceiverSocketId(receiverId),
+    });
 
     const receiverSocketId = getReceiverSocketId(receiverId);
 

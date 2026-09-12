@@ -29,7 +29,7 @@ export const getUsersForSidebar = async (req, res) => {
 
 export const sendMessage = async (req, res) => {
 
-    
+
     try {
         const { text, image } = req.body;
         const { id: receiverId } = req.params;
@@ -57,6 +57,10 @@ export const sendMessage = async (req, res) => {
 
         const receiverSocketId = getReceiverSocketId(receiverId);
         if (receiverSocketId) {
+            console.log("📨 SENDING MESSAGE", {
+                receiverId,
+                receiverSocketId,
+            });
             io.to(receiverSocketId).emit("newMessage", newMessage);
         }
 
