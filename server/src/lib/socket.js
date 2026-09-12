@@ -58,7 +58,13 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
 
     if (userId && userId !== "undefined") {
-      delete userSocketMap[String(userId)];
+      const currentSocketId = userSocketMap[String(userId)];
+
+      // Only remove the mapping if THIS socket is still
+      // the user's active socket.
+      if (currentSocketId === socket.id) {
+        delete userSocketMap[String(userId)];
+      }
     }
 
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
