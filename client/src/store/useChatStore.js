@@ -65,6 +65,8 @@ export const useChatStore = create((set, get) => ({
 
     socket.on("newMessage", handleNewMessage);
 
+    console.log("🟢 LISTENING FOR NEW MESSAGES ON SOCKET:", socket.id);
+
     return () => {
       socket.off("newMessage", handleNewMessage);
     };
