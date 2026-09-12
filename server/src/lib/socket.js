@@ -7,16 +7,16 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173"],
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
 
-export const userSocketMap = {}; 
+export const userSocketMap = {};
 
 export const getReceiverSocketId = (receiverId) => {
- 
+
   return userSocketMap[String(receiverId)];
 };
 
@@ -30,7 +30,7 @@ io.on("connection", (socket) => {
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
   socket.on("typing", ({ receiverId, senderId, isTyping }) => {
-    
+
 
     const receiverSocketId = getReceiverSocketId(receiverId);
 
