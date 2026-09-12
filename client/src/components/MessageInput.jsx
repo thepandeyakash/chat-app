@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
-import { socket } from "../lib/socket";
+
 import { useAuthStore } from "../store/useAuthStore";
 
 const MessageInput = () => {
@@ -13,7 +13,7 @@ const MessageInput = () => {
     const typingTimeoutRef = useRef(null);
 
     const { sendMessage, selectedUser } = useChatStore();
-    const { authUser } = useAuthStore();
+    const { authUser, socket } = useAuthStore();
 
     const handleTyping = (value) => {
         setText(value);
