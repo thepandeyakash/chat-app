@@ -4,7 +4,6 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import { Loader } from "lucide-react";
-import { connectSocket, disconnectSocket } from "./lib/socket";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -22,22 +21,10 @@ const App = () => {
   }, [checkAuth]);
 
   useEffect(() => {
-    if (authUser) {
-      connectSocket(authUser.id);
-    } else {
-      disconnectSocket();
-    }
-
-    return () => {
-      disconnectSocket();
-    };
-  }, [authUser]);
-
-  useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
-  
+
   if (isCheckingAuth) {
     return (
       <div className='h-screen flex justify-center items-center'>
